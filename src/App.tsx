@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Header } from "./components/Header";
+import { FloatingScrollButton } from "./components/FloatingScrollButton";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -64,6 +65,9 @@ export default function App() {
           {currentPage === "admin" && <AdminPage onNavigate={handleNavigation} />}
           {currentPage === "lms" && pageParam && <LMSPage courseId={pageParam} onNavigate={handleNavigation} />}
         </div>
+
+        {/* Floating Scroll to Top Button */}
+        <FloatingScrollButton />
       </div>
     </AuthProvider>
   );
