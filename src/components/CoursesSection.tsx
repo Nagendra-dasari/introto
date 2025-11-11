@@ -32,9 +32,9 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
     
     return (
       <div className="mb-16">
-        <div className="flex items-center gap-3 mb-8">
-          <h3 className="text-3xl text-white font-semibold">{segmentTitle}</h3>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${segmentColor}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-8">
+          <h3 className="text-2xl sm:text-3xl text-white font-semibold">{segmentTitle}</h3>
+          <span className={`px-3 py-1 rounded-full text-xs font-medium ${segmentColor} w-fit`}>
             {courses.length} {courses.length === 1 ? 'Course' : 'Courses'}
           </span>
         </div>
