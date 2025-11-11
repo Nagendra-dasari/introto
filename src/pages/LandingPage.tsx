@@ -28,7 +28,7 @@ export function LandingPage({ onNavigate, scrollToSection }: LandingPageProps) {
       <AboutSection />
       <Differentiators />
       <div id="courses">
-        <CoursesSection onNavigate={onNavigate} showAll={false} />
+        <CoursesSection onNavigate={onNavigate} showAll={false} scrollToCurriculum={true} />
       </div>
       <TestimonialsSection />
       <PrinciplesSection />
