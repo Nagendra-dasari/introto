@@ -49,11 +49,24 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
 
-  // scroll-follow effect: move the card inside the track based on scroll progress
+  // scroll-follow effect: move the card inside the track based on scroll progress (desktop only)
   useEffect(() => {
     let rafId: number | null = null;
 
     const onScroll = () => {
+      // Only run on desktop (lg breakpoint = 1024px)
+      if (window.innerWidth < 1024) {
+        // Reset styles on mobile
+        if (cardRef.current) {
+          cardRef.current.style.position = "static";
+          cardRef.current.style.transform = "none";
+        }
+        if (trackRef.current) {
+          trackRef.current.style.height = "auto";
+        }
+        return;
+      }
+
       if (!mainRef.current || !trackRef.current || !cardRef.current) return;
 
       const mainRect = mainRef.current.getBoundingClientRect();
@@ -156,7 +169,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div ref={mainRef} className="lg:col-span-2 space-y-8">
+          <div ref={mainRef} className="lg:col-span-2 space-y-8 order-1">
             {/* Hero Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -281,8 +294,8 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
             </motion.div>
           </div>
 
-          {/* Sidebar - Enrollment */}
-          <div className="lg:col-span-1">
+          {/* Sidebar - Enrollment - Shows below curriculum on mobile, beside on desktop */}
+          <div className="lg:col-span-1 order-2">
             <div ref={trackRef} className="relative">
               <div ref={cardRef} style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
                 <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
