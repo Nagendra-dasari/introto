@@ -56,7 +56,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
     const onScroll = () => {
       // Only run on desktop (lg breakpoint = 1024px)
       if (window.innerWidth < 1024) {
-        // Reset styles on mobile
+        // Reset styles on mobile - let natural flow position the card
         if (cardRef.current) {
           cardRef.current.style.position = "static";
           cardRef.current.style.transform = "none";
@@ -168,7 +168,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
         </button>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
+          {/* Main Content - Always first */}
           <div ref={mainRef} className="lg:col-span-2 space-y-8 order-1">
             {/* Hero Section */}
             <motion.div
