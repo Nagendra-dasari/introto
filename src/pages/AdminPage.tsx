@@ -18,7 +18,11 @@ import {
   Save,
   Shield,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  BookOpen,
+  Image as ImageIcon,
+  Calendar,
+  Tag
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 
@@ -61,6 +65,17 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
   const [currentOptions, setCurrentOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState(0);
   const [explanation, setExplanation] = useState("");
+
+  // Blog state
+  const [blogTitle, setBlogTitle] = useState("");
+  const [blogAuthor, setBlogAuthor] = useState("");
+  const [blogCategory, setBlogCategory] = useState("");
+  const [blogExcerpt, setBlogExcerpt] = useState("");
+  const [blogContent, setBlogContent] = useState("");
+  const [blogImage, setBlogImage] = useState<File | null>(null);
+  const [blogTags, setBlogTags] = useState("");
+  const [blogDate, setBlogDate] = useState("");
+  const [blogReadTime, setBlogReadTime] = useState("");
 
   const [uploadStatus, setUploadStatus] = useState<{type: 'success' | 'error' | null, message: string}>({type: null, message: ""});
 
@@ -159,6 +174,24 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
     }
   };
 
+  const handleBlogSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (blogTitle && blogAuthor && blogCategory && blogExcerpt && blogContent) {
+      setUploadStatus({type: 'success', message: `Blog post "${blogTitle}" published successfully!`});
+      // Reset form
+      setBlogTitle("");
+      setBlogAuthor("");
+      setBlogCategory("");
+      setBlogExcerpt("");
+      setBlogContent("");
+      setBlogImage(null);
+      setBlogTags("");
+      setBlogDate("");
+      setBlogReadTime("");
+      setTimeout(() => setUploadStatus({type: null, message: ""}), 3000);
+    }
+  };
+
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -208,7 +241,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="video" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-white/5 backdrop-blur-sm border border-white/10 h-auto">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 bg-white/5 backdrop-blur-sm border border-white/10 h-auto">
             <TabsTrigger value="video" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300 py-3">
               <Video className="w-4 h-4 mr-2" />
               Videos
@@ -224,6 +257,10 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
             <TabsTrigger value="quiz" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300 py-3">
               <ClipboardList className="w-4 h-4 mr-2" />
               Quizzes
+            </TabsTrigger>
+            <TabsTrigger value="blog" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300 py-3">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Blog
             </TabsTrigger>
           </TabsList>
 
@@ -667,10 +704,196 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
               </div>
             </Card>
           </TabsContent>
+
+          {/* Blog Creation Tab */}
+          <TabsContent value="blog">
+            <Card className="bg-white/10 backdrop-blur-xl border-white/20 p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Create Blog Post</h2>
+                  <p className="text-white/60 text-sm">Publish articles and insights</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleBlogSubmit} className="space-y-6">
+                {/* Title & Author */}
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium">Blog Title *</Label>
+                    <Input
+                      type="text"
+                      value={blogTitle}
+                      onChange={(e) => setBlogTitle(e.target.value)}
+                      placeholder="e.g., 5 Essential Skills Every Professional Needs"
+                      required
+                      className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 rounded-xl transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium">Author Name *</Label>
+                    <Input
+                      type="text"
+                      value={blogAuthor}
+                      onChange={(e) => setBlogAuthor(e.target.value)}
+                      placeholder="e.g., Dr. Sarah Johnson"
+                      required
+                      className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 rounded-xl transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Category & Tags */}
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium">Category *</Label>
+                    <Select value={blogCategory} onValueChange={setBlogCategory} required>
+                      <SelectTrigger className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white rounded-xl transition-all shadow-lg hover:shadow-rose-500/20">
+                        <SelectValue placeholder="Choose a category..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-2 border-white/20 rounded-xl shadow-2xl">
+                        {["Career Development", "Tech Insights", "Learning Tips", "Industry Trends", "Success Stories", "Professional Growth"].map((category) => (
+                          <SelectItem 
+                            key={category} 
+                            value={category} 
+                            className="text-white hover:bg-rose-500/20 hover:text-rose-300 cursor-pointer py-3 px-4 rounded-lg my-1 transition-all"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-rose-400"></div>
+                              {category}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium flex items-center gap-2">
+                      <Tag className="w-4 h-4" />
+                      Tags (comma-separated)
+                    </Label>
+                    <Input
+                      type="text"
+                      value={blogTags}
+                      onChange={(e) => setBlogTags(e.target.value)}
+                      placeholder="e.g., leadership, productivity, AI"
+                      className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 rounded-xl transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Date & Read Time */}
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      Publish Date *
+                    </Label>
+                    <Input
+                      type="date"
+                      value={blogDate}
+                      onChange={(e) => setBlogDate(e.target.value)}
+                      required
+                      className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 rounded-xl transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-3 block text-sm font-medium">Reading Time (minutes)</Label>
+                    <Input
+                      type="number"
+                      value={blogReadTime}
+                      onChange={(e) => setBlogReadTime(e.target.value)}
+                      placeholder="e.g., 5"
+                      min="1"
+                      className="h-12 bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 rounded-xl transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Featured Image */}
+                <div>
+                  <Label className="text-white mb-3 block text-sm font-medium flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    Featured Image
+                  </Label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setBlogImage(e.target.files?.[0] || null)}
+                      className="hidden"
+                      id="blog-image-upload"
+                    />
+                    <label
+                      htmlFor="blog-image-upload"
+                      className="flex items-center justify-center gap-2 p-8 border-2 border-dashed border-white/30 rounded-xl hover:border-rose-400 transition-all cursor-pointer bg-white/5 hover:bg-white/10"
+                    >
+                      <Upload className="w-6 h-6 text-white/70" />
+                      <span className="text-white/70">
+                        {blogImage ? blogImage.name : "Click to upload featured image (JPG, PNG)"}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Excerpt */}
+                <div>
+                  <Label className="text-white mb-3 block text-sm font-medium">Excerpt / Summary *</Label>
+                  <Textarea
+                    value={blogExcerpt}
+                    onChange={(e) => setBlogExcerpt(e.target.value)}
+                    placeholder="Brief summary of the blog post (2-3 sentences)..."
+                    required
+                    rows={3}
+                    className="bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 resize-none rounded-xl transition-all"
+                  />
+                  <p className="text-xs text-white/50 mt-2">This will be shown in blog previews and search results</p>
+                </div>
+
+                {/* Full Content */}
+                <div>
+                  <Label className="text-white mb-3 block text-sm font-medium">Full Content *</Label>
+                  <Textarea
+                    value={blogContent}
+                    onChange={(e) => setBlogContent(e.target.value)}
+                    placeholder="Write your full blog content here... You can use markdown formatting.
+
+Example:
+## Section Title
+Your content here...
+
+### Subsection
+- Point 1
+- Point 2
+
+**Bold text** and *italic text*"
+                    required
+                    rows={15}
+                    className="bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-rose-400/50 text-white placeholder:text-white/50 resize-none rounded-xl transition-all font-mono text-sm"
+                  />
+                  <p className="text-xs text-white/50 mt-2">Supports markdown formatting for rich content</p>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white border-0 h-12 text-base font-semibold"
+                >
+                  <Save className="w-5 h-5 mr-2" />
+                  Publish Blog Post
+                </Button>
+              </form>
+            </Card>
+          </TabsContent>
         </Tabs>
 
         {/* Quick Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
           <Card className="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 backdrop-blur-xl border-white/20 p-6">
             <Video className="w-8 h-8 text-blue-400 mb-3" />
             <div className="text-2xl font-bold text-white mb-1">24</div>
@@ -693,6 +916,12 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
             <ClipboardList className="w-8 h-8 text-amber-400 mb-3" />
             <div className="text-2xl font-bold text-white mb-1">18</div>
             <div className="text-sm text-white/70">Quizzes Created</div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-rose-500/20 to-pink-500/20 backdrop-blur-xl border-white/20 p-6">
+            <BookOpen className="w-8 h-8 text-rose-400 mb-3" />
+            <div className="text-2xl font-bold text-white mb-1">15</div>
+            <div className="text-sm text-white/70">Blog Posts</div>
           </Card>
         </div>
       </div>
