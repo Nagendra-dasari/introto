@@ -59,7 +59,7 @@ export function PrinciplesSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl text-white mb-6">
+          <h2 className="text-4xl lg:text-5xl text-white mb-3">
             Guiding Principles
           </h2>
           <p className="text-xl text-white/80 max-w-2xl mx-auto">
