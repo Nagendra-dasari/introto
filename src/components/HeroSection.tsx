@@ -33,7 +33,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative min-h-screen flex items-start pt-4">
+    <section className="relative min-h-screen flex items-start pt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-0 w-full">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Content */}
