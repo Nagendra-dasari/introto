@@ -5,8 +5,8 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-24 relative">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="pt-12 pb-24 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Image/Video */}
           <motion.div
@@ -40,20 +40,20 @@ export function AboutSection() {
             transition={{ duration: 0.8 }}
             className="space-y-6"
           >
-            <h2 className="text-4xl lg:text-5xl text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
               Empowering Learners to
               <span className="block bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">
                 Achieve Excellence
               </span>
             </h2>
 
-            <p className="text-lg text-white/80 leading-relaxed">
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed text-justify italic">
               EduVista is more than an education platform—it's a transformative journey. We partner with industry leaders and academic experts to deliver cutting-edge courses that bridge the gap between knowledge and career success.
             </p>
 
             {/* Features */}
             <div className="grid sm:grid-cols-2 gap-4 pt-4">
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
                   <Users className="w-5 h-5 text-white" />
                 </div>
@@ -63,7 +63,7 @@ export function AboutSection() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
@@ -74,7 +74,7 @@ export function AboutSection() {
               </div>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 flex justify-center">
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-teal-400 to-blue-500 hover:from-teal-500 hover:to-blue-600 text-white border-0 shadow-lg"

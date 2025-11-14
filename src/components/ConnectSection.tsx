@@ -28,13 +28,13 @@ export function ConnectSection() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content - Shows second on mobile, first on desktop */}
+          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="space-y-6 order-2 lg:order-1"
+            className="space-y-6"
           >
             <div className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
               <span className="text-sm text-amber-300">Free Download</span>
@@ -107,13 +107,13 @@ export function ConnectSection() {
             </form>
           </motion.div>
 
-          {/* Right Image - Shows first on mobile, second on desktop */}
+          {/* Right Image */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative order-1 lg:order-2"
+            className="relative"
           >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/30 backdrop-blur-sm border border-white/20">
               {/* E-book mockup */}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 import { FloatingScrollButton } from "./components/FloatingScrollButton";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LandingPage } from "./pages/LandingPage";
@@ -64,6 +65,9 @@ export default function App() {
           {currentPage === "profile" && <ProfilePage onNavigate={handleNavigation} />}
           {currentPage === "admin" && <AdminPage onNavigate={handleNavigation} />}
           {currentPage === "lms" && pageParam && <LMSPage courseId={pageParam} onNavigate={handleNavigation} />}
+          
+          {/* Footer - Available on all pages */}
+          <Footer />
         </div>
 
         {/* Floating Scroll to Top Button */}

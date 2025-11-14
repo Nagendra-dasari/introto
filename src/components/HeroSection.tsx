@@ -50,7 +50,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               </span>
             </h1>
             
-            <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-lg">
+            <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-lg italic">
               Join thousands of professionals who are advancing their careers through our expertly crafted courses and comprehensive skill development programs.
             </p>
             

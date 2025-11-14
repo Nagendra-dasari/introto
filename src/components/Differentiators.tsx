@@ -64,20 +64,22 @@ const differentiators = [
 
 export function Differentiators() {
   return (
-    <section className="py-24 relative">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-16 sm:py-20 md:py-24 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6 px-4 sm:px-0">
             What Sets Us Apart
           </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            Experience the EduVista advantage through our commitment to excellence, innovation, and your success
+          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto italic px-4 sm:px-0">
+            Experience the EduVista advantage through our commitment<br />
+            to excellence, innovation, and your success<br />
+            Join thousands of learners transforming their careers today
           </p>
         </motion.div>
 
@@ -92,9 +94,9 @@ export function Differentiators() {
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className="group"
             >
-              <div className="h-full p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all hover:shadow-xl hover:shadow-black/20">
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <item.icon className="w-7 h-7 text-white" />
+              <div className="h-full p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all hover:shadow-xl hover:shadow-black/20 flex flex-col items-center text-center">
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <item.icon className="w-5 h-5 text-white" />
                 </div>
                 
                 <h3 className="text-white mb-2">{item.title}</h3>

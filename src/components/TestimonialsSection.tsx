@@ -225,54 +225,56 @@ export function TestimonialsSection() {
   );
 
   return (
-    <section id="testimonials" className="py-24 relative overflow-hidden">
+    <section id="testimonials" className="py-16 sm:py-20 md:py-24 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-teal-500/20 rounded-full blur-3xl"></div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6 px-4 sm:px-0">
             What Our Learners Say
           </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
             Join over 50,000 professionals who have transformed their careers with EduVista
           </p>
         </motion.div>
 
         <div className="relative">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8 items-stretch">
             {visibleTestimonials.map((testimonial, idx) => (
               <motion.div
                 key={testimonial.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.05, y: -8, transition: { duration: 0.2 } }}
+                className="h-full flex"
               >
-                <Card className="p-6 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/30 transition-all h-full flex flex-col">
-                  <p className="text-white/90 mb-6 flex-1 leading-relaxed">
+                <Card className="p-6 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/30 transition-all w-full flex flex-col h-full">
+                  <p className="text-white/90 mb-6 leading-relaxed line-clamp-4 min-h-[6rem] sm:min-h-[6.5rem] flex-shrink-0 text-sm sm:text-base overflow-hidden">
                     {testimonial.content}
                   </p>
 
-                  <div className="flex items-center gap-1 mb-4">
+                  <div className="flex items-center gap-1 mb-4 h-5 flex-shrink-0">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/10 mt-auto h-16 flex-shrink-0">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white flex-shrink-0">
                       {testimonial.image}
                     </div>
-                    <div>
-                      <div className="text-white">{testimonial.name}</div>
-                      <div className="text-sm text-white/70">{testimonial.role}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-white font-medium truncate">{testimonial.name}</div>
+                      <div className="text-sm text-white/70 truncate">{testimonial.role}</div>
                     </div>
                   </div>
                 </Card>

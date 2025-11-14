@@ -4,7 +4,6 @@ import { Differentiators } from "../components/Differentiators";
 import { CoursesSection } from "../components/CoursesSection";
 import { TestimonialsSection } from "../components/TestimonialsSection";
 import { PrinciplesSection } from "../components/PrinciplesSection";
-import { Footer } from "../components/Footer";
 import { useEffect } from "react";
 
 interface LandingPageProps {
@@ -32,7 +31,6 @@ export function LandingPage({ onNavigate, scrollToSection }: LandingPageProps) {
       </div>
       <TestimonialsSection />
       <PrinciplesSection />
-      <Footer />
     </>
   );
 }

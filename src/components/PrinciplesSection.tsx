@@ -50,19 +50,19 @@ export function PrinciplesSection() {
   const currentPrinciple = principles[currentSlide];
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl text-white mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6">
             Guiding Principles
           </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
             The core values that drive everything we do and shape the future of learning
           </p>
         </motion.div>
@@ -80,7 +80,7 @@ export function PrinciplesSection() {
                 transition={{ duration: 0.5 }}
                 className="relative group"
               >
-                <Card className="p-6 sm:p-8 md:p-10 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/30 transition-all h-full flex flex-col">
+                <Card className="p-8 sm:p-10 md:p-12 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/30 transition-all h-full flex flex-col">
                   {/* Title */}
                   <h3 className="text-xl sm:text-2xl text-white mb-4">{currentPrinciple.title}</h3>
 
@@ -89,13 +89,11 @@ export function PrinciplesSection() {
                     {currentPrinciple.quote}
                   </p>
 
-                  {/* Author */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${currentPrinciple.gradient}`}></div>
-                    <div>
-                      <div className="text-white">{currentPrinciple.author}</div>
-                      <div className="text-sm text-white/70">{currentPrinciple.role}</div>
-                    </div>
+                  {/* Replacement Text */}
+                  <div className="pt-4 border-t border-white/10">
+                    <p className="text-sm text-white/70">
+                      These principles guide our mission to deliver exceptional learning experiences and empower students worldwide.
+                    </p>
                   </div>
                 </Card>
               </motion.div>

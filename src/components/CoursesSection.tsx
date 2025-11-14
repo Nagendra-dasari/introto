@@ -4,6 +4,14 @@ import { Button } from "./ui/button";
 import { Clock, Users, ArrowRight, Languages } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { coursesData } from "../data/coursesData";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface CoursesSectionProps {
   onNavigate: (page: string, courseId?: number | string, scrollTo?: string) => void;
@@ -13,6 +21,25 @@ interface CoursesSectionProps {
 }
 
 export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", scrollToCurriculum = false }: CoursesSectionProps) {
+  const [currency, setCurrency] = useState<string>("USD");
+  
+  // Currency conversion rates (base: USD)
+  const currencyRates: Record<string, number> = {
+    USD: 1,
+    EUR: 0.92,
+    GBP: 0.79,
+    AED: 3.67,
+    INR: 83.0,
+  };
+
+  const currencySymbols: Record<string, string> = {
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    AED: "د.إ",
+    INR: "₹",
+  };
+
   // Filter courses by search query
   const filteredCourses = coursesData.filter(course =>
     course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -20,7 +47,12 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
     course.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const displayCourses = showAll ? filteredCourses : filteredCourses.slice(0, 3);
+  const displayCourses = showAll ? filteredCourses : filteredCourses.slice(0, 6);
+
+  // Convert price based on selected currency
+  const convertPrice = (priceInUSD: number): number => {
+    return Math.round(priceInUSD * currencyRates[currency] * 100) / 100;
+  };
   
   // Group courses by segment
   const flagshipCourses = displayCourses.filter(c => c.segment === 'flagship');
@@ -65,7 +97,7 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
 
                   <div className="p-6 flex-1 flex flex-col">
                     {/* Centered Title */}
-                    <h3 className="text-white text-center mb-4 text-lg font-semibold group-hover:text-amber-300 transition-colors">
+                    <h3 className="text-white text-center mb-2 text-lg font-semibold group-hover:text-amber-300 transition-colors">
                       {course.title}
                     </h3>
 
@@ -85,13 +117,29 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                       </div>
                     </div>
 
-                    {/* Brief Description (3-4 lines) */}
-                    <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-3 text-center">
+                    {/* Brief Description (4 lines) */}
+                    <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center">
                       {course.description}
                     </p>
 
-                    <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-                      <span className="text-2xl text-white">${course.price}</span>
+                    <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl text-white">
+                          {currencySymbols[currency]}{convertPrice(course.price)}
+                        </span>
+                        <Select value={currency} onValueChange={setCurrency}>
+                          <SelectTrigger className="h-8 w-20 bg-white/10 border-white/20 text-white text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-slate-800 border-white/20">
+                            <SelectItem value="USD">USD</SelectItem>
+                            <SelectItem value="EUR">EUR</SelectItem>
+                            <SelectItem value="GBP">GBP</SelectItem>
+                            <SelectItem value="AED">AED</SelectItem>
+                            <SelectItem value="INR">INR</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <Button 
                         size="sm"
                         onClick={() => onNavigate("course-detail", course.id, scrollToCurriculum ? "curriculum" : undefined)}
@@ -112,7 +160,7 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
 
   return (
     <section id="courses" className="py-12 relative">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {!showAll && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -170,7 +218,7 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
 
                     <div className="p-6 flex-1 flex flex-col">
                       {/* Centered Title */}
-                      <h3 className="text-white text-center mb-4 text-lg font-semibold group-hover:text-amber-300 transition-colors">
+                      <h3 className="text-white text-center mb-2 text-lg font-semibold group-hover:text-amber-300 transition-colors">
                         {course.title}
                       </h3>
 
@@ -190,13 +238,29 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                         </div>
                       </div>
 
-                      {/* Brief Description (3-4 lines) */}
-                      <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-3 text-center">
+                      {/* Brief Description (4 lines) */}
+                      <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center">
                         {course.description}
                       </p>
 
-                      <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-                        <span className="text-2xl text-white">${course.price}</span>
+                      <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl text-white">
+                            {currencySymbols[currency]}{convertPrice(course.price)}
+                          </span>
+                          <Select value={currency} onValueChange={setCurrency}>
+                            <SelectTrigger className="h-8 w-20 bg-white/10 border-white/20 text-white text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-slate-800 border-white/20">
+                              <SelectItem value="USD">USD</SelectItem>
+                              <SelectItem value="EUR">EUR</SelectItem>
+                              <SelectItem value="GBP">GBP</SelectItem>
+                              <SelectItem value="AED">AED</SelectItem>
+                              <SelectItem value="INR">INR</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <Button 
                           size="sm"
                           onClick={() => onNavigate("course-detail", course.id, scrollToCurriculum ? "curriculum" : undefined)}

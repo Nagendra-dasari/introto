@@ -1,37 +1,37 @@
 import React, { useState } from "react";
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Download } from "lucide-react";
 
 export function Footer() {
   const [email, setEmail] = useState("");
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleDownload = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter subscription
+    // Handle e-book download
     if (email) {
-      alert(`Thank you for subscribing with ${email}!`);
+      alert(`Thank you! Download link sent to ${email}!`);
       setEmail("");
     }
   };
 
   return (
-    <footer className="relative border-t border-white/10 bg-black/20 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12 items-start">
-          {/* Introto Brand Info - Spans 2 columns */}
-          <div className="lg:col-span-2 flex flex-col">
+    <footer className="relative border-t border-white/10 bg-black/20 backdrop-blur-sm" style={{ fontFamily: 'Calibri, sans-serif' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-4 sm:pb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mb-8 sm:mb-12 items-stretch gap-6 lg:gap-8">
+          {/* Panel 1 - Introto Newsletter */}
+          <div className="flex flex-col h-full sm:col-span-2 lg:col-span-2 lg:mr-8">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
                 <span className="text-white text-xl">I</span>
               </div>
               <span className="text-xl text-white">Introto</span>
             </div>
-            <p className="text-white mb-4 text-sm leading-relaxed">
+            <p className="text-white mb-4 text-sm leading-relaxed line-clamp-2">
               Empowering learners worldwide with AI-powered education.<br />
               Join thousands of students who are advancing their careers with Introto.
             </p>
             <div className="mb-4">
-              <h3 className="text-white mb-3 text-sm">Subscribe to our newsletter</h3>
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 max-w-md">
+              <h3 className="text-white mb-3 text-sm">Download Free E-book</h3>
+              <form onSubmit={handleDownload} className="flex flex-col sm:flex-row gap-2 w-full">
                 <input
                   type="email"
                   placeholder="Enter your email"
@@ -44,47 +44,52 @@ export function Footer() {
                   type="submit"
                   className="w-full sm:w-auto px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:from-amber-500 hover:to-orange-600 transition-all flex items-center justify-center gap-1.5 whitespace-nowrap shadow-lg"
                 >
-                  <Mail className="w-3.5 h-3.5" />
-                  Subscribe
+                  <Download className="w-3.5 h-3.5" />
+                  Download
                 </button>
               </form>
             </div>
-            <div className="flex gap-3">
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg bg-black/30 border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg bg-black/30 border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg bg-black/30 border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg bg-black/30 border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg bg-black/30 border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-            </div>
           </div>
 
-          {/* Company */}
-          <div className="flex flex-col">
+          {/* Panel 2 - Connect */}
+          <div className="flex flex-col h-full">
+            <h3 className="text-white mb-4 text-base font-semibold">Connect</h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                  <Facebook className="w-4 h-4" />
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                  <Twitter className="w-4 h-4" />
+                  Twitter
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                  <Linkedin className="w-4 h-4" />
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                  <Instagram className="w-4 h-4" />
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                  <Youtube className="w-4 h-4" />
+                  YouTube
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Panel 3 - Company */}
+          <div className="flex flex-col h-full">
             <h3 className="text-white mb-4 text-base font-semibold">Company</h3>
             <ul className="space-y-3 text-sm">
               <li>
@@ -115,8 +120,8 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Legal */}
-          <div className="flex flex-col">
+          {/* Panel 4 - Legal */}
+          <div className="flex flex-col h-full">
             <h3 className="text-white mb-4 text-base font-semibold">Legal</h3>
             <ul className="space-y-3 text-sm">
               <li>
@@ -139,29 +144,20 @@ export function Footer() {
                   Refund Policy
                 </a>
               </li>
+              <li>
+                <a href="#" className="text-white/70 hover:text-white transition-colors">
+                  Accessibility
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-white/70 text-sm text-center md:text-left">
+          <div className="flex flex-col md:flex-row justify-center items-center">
+            <div className="text-white/70 text-sm text-center">
               © 2025 Introto. All rights reserved.
-            </div>
-            <div className="flex flex-wrap gap-6 text-sm">
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Terms of Service
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Cookie Policy
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Accessibility
-              </a>
             </div>
           </div>
         </div>
