@@ -33,7 +33,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative min-h-screen flex items-start pt-8">
+    <section className="relative min-h-screen flex items-start pt-8 pb-1 sm:pb-1 md:pb-1">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-0 w-full">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Content */}
@@ -43,49 +43,48 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             transition={{ duration: 0.8 }}
             className="space-y-4 sm:space-y-6"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight">
-              Transform Your Future with
-              <span className="block bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 bg-clip-text text-transparent">
-                World-Class Education
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight font-bold">
+              Transform Yourself with
+              <span className="block text-orange-500">
+                Bharat's Distilled Wisdom
               </span>
             </h1>
             
-            <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-lg italic">
-              Join thousands of professionals who are advancing their careers through our expertly crafted courses and comprehensive skill development programs.
+            <p className="text-lg sm:text-xl md:text-2xl text-white/80 max-w-2xl italic">
+              Deep knowledge made clear, practical and relevant - from the greatest minds to you - the curious seeker
             </p>
             
             <div className="flex flex-wrap gap-4 pt-4">
               <Button 
                 size="lg"
                 onClick={() => onNavigate("home", "courses")}
-                className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-0 shadow-xl shadow-amber-500/30"
+                className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-0 shadow-xl shadow-amber-500/30 w-fit"
               >
-                View Course Catalog
+                Start Learning
               </Button>
               <Button 
                 size="lg"
-                variant="outline"
                 onClick={() => onNavigate("about")}
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                className="bg-gradient-to-r from-teal-400 to-blue-500 hover:from-teal-500 hover:to-blue-600 text-white border-0 shadow-xl shadow-teal-500/30 w-fit"
               >
-                Learn More
+                Introto Story
               </Button>
             </div>
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-8 pt-4 sm:pt-6">
               <div>
-                <div className="text-2xl sm:text-3xl text-white">50K+</div>
-                <div className="text-xs sm:text-sm text-white/70">Active Learners</div>
+                <div className="text-2xl sm:text-3xl text-white">5K+</div>
+                <div className="text-xs sm:text-sm text-white/70">Learners</div>
               </div>
               <div className="w-px h-8 sm:h-12 bg-white/20"></div>
               <div>
-                <div className="text-2xl sm:text-3xl text-white">200+</div>
+                <div className="text-2xl sm:text-3xl text-white">10+</div>
                 <div className="text-xs sm:text-sm text-white/70">Expert Courses</div>
               </div>
               <div className="w-px h-8 sm:h-12 bg-white/20"></div>
               <div>
                 <div className="text-2xl sm:text-3xl text-white">98%</div>
-                <div className="text-xs sm:text-sm text-white/70">Satisfaction</div>
+                <div className="text-xs sm:text-sm text-white/70">Positive Approval</div>
               </div>
             </div>
           </motion.div>

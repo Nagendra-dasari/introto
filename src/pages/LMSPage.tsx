@@ -45,7 +45,7 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl text-white mb-4">Course Not Found</h1>
+          <h1 className="text-3xl text-white mb-4 font-bold">Course Not Found</h1>
           <Button onClick={() => onNavigate("courses")}>Back to Courses</Button>
         </div>
       </div>
@@ -136,7 +136,7 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl text-white mb-4">{course.title}</h1>
+          <h1 className="text-4xl text-white mb-4 font-bold">{course.title}</h1>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-white/70">
               <span>Course Progress: {completedModules} / {totalModules} modules completed</span>
@@ -155,8 +155,8 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
             <Card className="p-8 border-green-500/50 bg-gradient-to-r from-green-500/10 to-emerald-500/10">
               <div className="text-center">
                 <Award className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                <h2 className="text-3xl text-white mb-2">Congratulations!</h2>
-                <p className="text-white/80 mb-6">You've successfully completed the course</p>
+                <h2 className="text-3xl text-white mb-2 font-bold">Congratulations!</h2>
+                <p className="text-white/80 mb-6 italic">You've successfully completed the course</p>
                 <Button
                   onClick={downloadCertificate}
                   size="lg"
@@ -174,7 +174,7 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
           {/* Sidebar - Module Tree */}
           <div className="lg:col-span-1">
             <Card className="p-6 border-white/10 bg-white/5 backdrop-blur-sm sticky top-24">
-              <h3 className="text-xl text-white mb-4">Course Content</h3>
+              <h3 className="text-xl text-white mb-4 font-bold">Course Content</h3>
               <div className="space-y-2">
                 {course.modules.map((module, idx) => {
                   const progress = moduleProgress[module.id];
@@ -280,17 +280,17 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
           <div className="lg:col-span-3">
             {showFeedback ? (
               <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                <h2 className="text-3xl text-white mb-6">Course Feedback</h2>
+                <h2 className="text-3xl text-white mb-6 font-bold">Course Feedback</h2>
                 
                 {feedbackSubmitted ? (
                   <div className="text-center py-8">
                     <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                    <h3 className="text-2xl text-white mb-2">Thank You!</h3>
-                    <p className="text-white/80">Your feedback has been submitted successfully.</p>
+                    <h3 className="text-2xl text-white mb-2 font-bold">Thank You!</h3>
+                    <p className="text-white/80 italic">Your feedback has been submitted successfully.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleFeedbackSubmit} className="space-y-6">
-                    <p className="text-white/80">
+                    <p className="text-white/80 italic">
                       We'd love to hear about your experience with this course. Your feedback helps us improve and helps other learners make informed decisions.
                     </p>
 
@@ -320,8 +320,8 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
               <div className="space-y-6">
                 {/* Content Section */}
                 <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                  <h2 className="text-3xl text-white mb-4">{currentModule.title}</h2>
-                  <p className="text-white/80 mb-6">{currentModule.description}</p>
+                  <h2 className="text-3xl text-white mb-4 font-bold">{currentModule.title}</h2>
+                  <p className="text-white/80 mb-6 italic">{currentModule.description}</p>
 
                   <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center border border-white/10 mb-6">
                     {currentModule.content.type === 'video' && (
@@ -349,7 +349,7 @@ export function LMSPage({ courseId, onNavigate }: LMSPageProps) {
 
                 {/* Quiz Section */}
                 <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                  <h3 className="text-2xl text-white mb-6">Module Quiz</h3>
+                  <h3 className="text-2xl text-white mb-6 font-bold">Module Quiz</h3>
 
                   {currentProgress.quizSubmitted ? (
                     <div>

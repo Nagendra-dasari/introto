@@ -169,7 +169,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
                       <BookOpen className="w-8 h-8 text-white/30" />
                     </div>
-                    <h4 className="text-lg font-semibold text-white mb-2">No courses yet</h4>
+                    <h4 className="text-lg font-bold text-white mb-2">No courses yet</h4>
                     <p className="text-white/60 text-sm mb-6">Start your learning journey today!</p>
                     <Button
                       onClick={() => onNavigate("courses")}
@@ -201,7 +201,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                             {/* Course Info */}
                             <div className="flex-1 min-w-0">
                               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                                <h4 className="text-base sm:text-lg font-semibold text-white group-hover:text-amber-300 transition-colors">
+                                <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
                                   {course.title}
                                 </h4>
                                 <span className="px-2.5 py-1 rounded-full bg-green-500/20 text-green-300 text-xs font-medium border border-green-500/30 w-fit">

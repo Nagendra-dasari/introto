@@ -12,9 +12,7 @@ import { BlogPage } from "./pages/BlogPage";
 import { CommunityPage } from "./pages/CommunityPage";
 import { LMSPage } from "./pages/LMSPage";
 import { ProfilePage } from "./pages/ProfilePage";
-import { AdminPage } from "./pages/AdminPage";
-
-type PageType = "home" | "login" | "courses" | "course-detail" | "about" | "blog" | "community" | "lms" | "profile" | "admin";
+type PageType = "home" | "login" | "courses" | "course-detail" | "about" | "blog" | "community" | "lms" | "profile";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("home");
@@ -63,7 +61,6 @@ export default function App() {
           {currentPage === "blog" && <BlogPage />}
           {currentPage === "community" && <CommunityPage onNavigate={handleNavigation} />}
           {currentPage === "profile" && <ProfilePage onNavigate={handleNavigation} />}
-          {currentPage === "admin" && <AdminPage onNavigate={handleNavigation} />}
           {currentPage === "lms" && pageParam && <LMSPage courseId={pageParam} onNavigate={handleNavigation} />}
           
           {/* Footer - Available on all pages */}

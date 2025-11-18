@@ -12,11 +12,26 @@ import {
   BookOpen,
   CreditCard,
   Lock,
+  Languages,
+  Share2,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  PlayCircle,
+  FileText,
+  Headphones,
 } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { coursesData } from "../data/coursesData";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 
 interface CourseDetailPageProps {
   courseId: number;
@@ -32,6 +47,31 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [name, setName] = useState("");
+  const [copiedCourseId, setCopiedCourseId] = useState<number | null>(null);
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
+  const [currency, setCurrency] = useState<string>("USD");
+
+  // Currency conversion rates (base: USD)
+  const currencyRates: Record<string, number> = {
+    USD: 1,
+    EUR: 0.92,
+    GBP: 0.79,
+    AED: 3.67,
+    INR: 83.0,
+  };
+
+  const currencySymbols: Record<string, string> = {
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    AED: "د.إ",
+    INR: "₹",
+  };
+
+  // Convert price based on selected currency
+  const convertPrice = (priceInUSD: number): number => {
+    return Math.round(priceInUSD * currencyRates[currency] * 100) / 100;
+  };
 
   useEffect(() => {
     if (scrollToSection) {
@@ -52,6 +92,8 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
   // scroll-follow effect: move the card inside the track based on scroll progress (desktop only)
   useEffect(() => {
     let rafId: number | null = null;
+    let ticking = false;
+    let resizeTimeout: NodeJS.Timeout | null = null;
 
     const onScroll = () => {
       // Only run on desktop (lg breakpoint = 1024px)
@@ -60,14 +102,20 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
         if (cardRef.current) {
           cardRef.current.style.position = "static";
           cardRef.current.style.transform = "none";
+          cardRef.current.style.transition = "none";
+          cardRef.current.style.willChange = "auto";
         }
         if (trackRef.current) {
           trackRef.current.style.height = "auto";
         }
+        ticking = false;
         return;
       }
 
-      if (!mainRef.current || !trackRef.current || !cardRef.current) return;
+      if (!mainRef.current || !trackRef.current || !cardRef.current) {
+        ticking = false;
+        return;
+      }
 
       const mainRect = mainRef.current.getBoundingClientRect();
       const cardEl = cardRef.current;
@@ -88,29 +136,46 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
 
       const translate = clamped * Math.max(0, mainHeight - cardHeight);
 
-      // apply transform using rAF friendly update
+      // apply transform with smooth transitions
       cardEl.style.position = "absolute";
       cardEl.style.top = "0px";
       cardEl.style.left = "0px";
       cardEl.style.width = "100%";
-      cardEl.style.transform = `translateY(${translate}px)`;
+      cardEl.style.willChange = "transform";
+      cardEl.style.transition = "transform 0.2s ease-out";
+      cardEl.style.transform = `translate3d(0, ${translate}px, 0)`;
+      
+      ticking = false;
     };
 
-    const handler = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(onScroll);
+    const scrollHandler = () => {
+      if (!ticking) {
+        if (rafId) cancelAnimationFrame(rafId);
+        ticking = true;
+        rafId = requestAnimationFrame(onScroll);
+      }
     };
 
-    window.addEventListener("scroll", handler, { passive: true });
-    window.addEventListener("resize", handler);
+    const resizeHandler = () => {
+      // Debounce resize events
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(onScroll);
+      }, 150);
+    };
+
+    window.addEventListener("scroll", scrollHandler, { passive: true });
+    window.addEventListener("resize", resizeHandler);
 
     // run once to initialize
-    handler();
+    onScroll();
 
     return () => {
-      window.removeEventListener("scroll", handler);
-      window.removeEventListener("resize", handler);
+      window.removeEventListener("scroll", scrollHandler);
+      window.removeEventListener("resize", resizeHandler);
       if (rafId) cancelAnimationFrame(rafId);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
     };
   }, [showPayment]);
 
@@ -118,7 +183,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl text-white mb-4">Course Not Found</h1>
+          <h1 className="text-3xl text-white mb-4 font-bold">Course Not Found</h1>
           <Button onClick={() => onNavigate("courses")}>Back to Courses</Button>
         </div>
       </div>
@@ -141,6 +206,50 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
     onNavigate("lms", courseId);
   };
 
+  const handleShareCourse = async () => {
+    const courseLink = `${window.location.origin}/course-detail/${courseId}`;
+    try {
+      await navigator.clipboard.writeText(courseLink);
+      setCopiedCourseId(courseId);
+      setTimeout(() => setCopiedCourseId(null), 2000);
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = courseLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopiedCourseId(courseId);
+      setTimeout(() => setCopiedCourseId(null), 2000);
+    }
+  };
+
+  const toggleModule = (moduleId: number) => {
+    setExpandedModules(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(moduleId)) {
+        newSet.delete(moduleId);
+      } else {
+        newSet.add(moduleId);
+      }
+      return newSet;
+    });
+  };
+
+  const getContentIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'video':
+        return <PlayCircle className="w-4 h-4" />;
+      case 'audio':
+        return <Headphones className="w-4 h-4" />;
+      case 'pdf':
+        return <FileText className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
+    }
+  };
+
   if (enrolled) {
     onNavigate("lms", courseId);
     return null;
@@ -158,18 +267,18 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
 
   return (
     <div className="min-h-screen pt-12 pb-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <button
           onClick={() => onNavigate("courses")}
-          className="flex items-center gap-2 text-white/70 hover:text-white mb-8 transition-colors"
+          className="flex items-center gap-2 text-white/70 hover:text-white mb-6 sm:mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Courses
         </button>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content - Always first */}
-          <div ref={mainRef} className="lg:col-span-2 space-y-8 order-1">
+          <div ref={mainRef} className="lg:col-span-2 space-y-6 sm:space-y-8 order-1">
             {/* Hero Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -192,9 +301,9 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
                     </span>
                   </div>
 
-                  <h1 className="text-4xl text-white mb-4">{course.title}</h1>
+                  <h1 className="text-4xl text-white mb-4 font-bold">{course.title}</h1>
 
-                  <p className="text-lg text-white/80 mb-6">{course.description}</p>
+                  <p className="text-lg text-white/80 mb-6 italic">{course.description}</p>
 
                   <div className="flex flex-wrap items-center gap-6 text-white/70">
                     <div className="flex items-center gap-2">
@@ -203,16 +312,29 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="w-5 h-5" />
-                      <span>{course.students} students</span>
+                      <span>{course.students}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-                      <span className="text-white">{course.rating}</span>
+                      <Languages className="w-5 h-5" />
+                      <span>English</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="w-5 h-5" />
-                      <span>{course.modules.length} modules</span>
-                    </div>
+                    <button
+                      onClick={handleShareCourse}
+                      className="flex items-center gap-2 hover:text-amber-300 transition-colors cursor-pointer"
+                      title="Share course"
+                    >
+                      {copiedCourseId === courseId ? (
+                        <>
+                          <Check className="w-5 h-5 text-green-400" />
+                          <span className="text-green-400">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share2 className="w-5 h-5" />
+                          <span>Share</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </Card>
@@ -235,7 +357,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                <h2 className="text-2xl text-white mb-6">What You'll Learn</h2>
+                <h2 className="text-2xl text-white mb-6 font-bold">What You'll Learn</h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   {course.learningOutcomes.map((outcome, idx) => (
                     <div key={idx} className="flex items-start gap-3">
@@ -254,15 +376,15 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                <h2 className="text-2xl text-white mb-6">Your Instructor</h2>
+                <h2 className="text-2xl text-white mb-6 font-bold">Your Instructor</h2>
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-2xl flex-shrink-0">
                     {course.instructor.name.split(" ").map((n) => n[0]).join("")}
                   </div>
                   <div>
-                    <h3 className="text-xl text-white mb-1">{course.instructor.name}</h3>
+                    <h3 className="text-xl text-white mb-1 font-bold">{course.instructor.name}</h3>
                     <p className="text-amber-300 mb-2">{course.instructor.title}</p>
-                    <p className="text-white/70">{course.instructor.bio}</p>
+                    <p className="text-white/70 italic">{course.instructor.bio}</p>
                   </div>
                 </div>
               </Card>
@@ -271,24 +393,149 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
             {/* Course Curriculum */}
             <motion.div id="curriculum" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}>
               <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
-                <h2 className="text-2xl text-white mb-6">Course Curriculum</h2>
+                <h2 className="text-2xl text-white mb-6 font-bold">Course Curriculum</h2>
                 <div className="space-y-4">
-                  {course.modules.map((module, idx) => (
-                    <div key={module.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white flex-shrink-0">{idx + 1}</div>
-                        <div className="flex-1">
-                          <h3 className="text-white mb-1">{module.title}</h3>
-                          <p className="text-sm text-white/70 mb-2">{module.description}</p>
-                          <div className="flex items-center gap-4 text-sm text-white/60">
-                            <span>{module.content.type.toUpperCase()}</span>
-                            {module.content.duration && <span>{module.content.duration}</span>}
-                            <span>{module.quiz.questions.length} quiz questions</span>
+                  {course.modules.map((module, idx) => {
+                    const isExpanded = expandedModules.has(module.id);
+                    return (
+                      <div key={module.id} className="rounded-xl bg-white/5 border border-white/10 overflow-hidden transition-all hover:border-white/20">
+                        {/* Module Header - Always Visible */}
+                        <button
+                          onClick={() => toggleModule(module.id)}
+                          className="w-full p-4 flex items-start gap-4 hover:bg-white/5 transition-colors text-left"
+                        >
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white flex-shrink-0 font-semibold">
+                            {idx + 1}
                           </div>
-                        </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h3 className="text-white mb-1 font-bold">{module.title}</h3>
+                                <p className="text-sm text-white/70 mb-2 italic">{module.description}</p>
+                                <div className="flex items-center gap-4 text-sm text-white/60 flex-wrap">
+                                  <span className="flex items-center gap-1">
+                                    {getContentIcon(module.content.type)}
+                                    {module.content.type.toUpperCase()}
+                                  </span>
+                                  {module.content.duration && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3" />
+                                      {module.content.duration}
+                                    </span>
+                                  )}
+                                  <span className="flex items-center gap-1">
+                                    <BookOpen className="w-3 h-3" />
+                                    {module.quiz.questions.length} quiz {module.quiz.questions.length === 1 ? 'question' : 'questions'}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex-shrink-0">
+                                {isExpanded ? (
+                                  <ChevronUp className="w-5 h-5 text-white/70 transition-transform" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-white/70 transition-transform" />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* Expanded Content - Tree-like Structure */}
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-4 pb-4 pt-0 border-t border-white/10 ml-14">
+                              <div className="space-y-4 pt-4">
+                                {/* What You'll Learn Section */}
+                                <div className="space-y-2">
+                                  <h4 className="text-white font-bold flex items-center gap-2">
+                                    <CheckCircle className="w-4 h-4 text-green-400" />
+                                    What You'll Learn
+                                  </h4>
+                                  <div className="pl-6 space-y-2">
+                                    <div className="flex items-start gap-2">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
+                                      <p className="text-sm text-white/80 italic">Master the core concepts and fundamentals covered in this module</p>
+                                    </div>
+                                    <div className="flex items-start gap-2">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
+                                      <p className="text-sm text-white/80 italic">Apply practical skills through hands-on exercises and examples</p>
+                                    </div>
+                                    <div className="flex items-start gap-2">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
+                                      <p className="text-sm text-white/80 italic">Understand real-world applications and use cases</p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Content Breakdown */}
+                                <div className="space-y-2">
+                                  <h4 className="text-white font-bold flex items-center gap-2">
+                                    {getContentIcon(module.content.type)}
+                                    Module Content
+                                  </h4>
+                                  <div className="pl-6 space-y-3">
+                                    <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                                      <div className="mt-0.5">
+                                        {getContentIcon(module.content.type)}
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="text-white text-sm font-medium mb-1">
+                                          {module.title} - {module.content.type.charAt(0).toUpperCase() + module.content.type.slice(1)}
+                                        </div>
+                                        <div className="flex items-center gap-3 text-xs text-white/60">
+                                          {module.content.duration && (
+                                            <span className="flex items-center gap-1">
+                                              <Clock className="w-3 h-3" />
+                                              {module.content.duration}
+                                            </span>
+                                          )}
+                                          <span className="capitalize">{module.content.type}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Quiz Information */}
+                                <div className="space-y-2">
+                                  <h4 className="text-white font-bold flex items-center gap-2">
+                                    <BookOpen className="w-4 h-4" />
+                                    Assessment
+                                  </h4>
+                                  <div className="pl-6">
+                                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                                      <p className="text-sm text-white/80 mb-2">
+                                        This module includes <span className="text-amber-300 font-semibold">{module.quiz.questions.length}</span> quiz {module.quiz.questions.length === 1 ? 'question' : 'questions'} to test your understanding.
+                                      </p>
+                                      <div className="space-y-2 mt-3">
+                                        {module.quiz.questions.slice(0, 3).map((question, qIdx) => (
+                                          <div key={question.id} className="flex items-start gap-2 text-xs text-white/70">
+                                            <span className="text-amber-300 font-medium">{qIdx + 1}.</span>
+                                            <span>{question.question}</span>
+                                          </div>
+                                        ))}
+                                        {module.quiz.questions.length > 3 && (
+                                          <p className="text-xs text-white/60 italic">
+                                            + {module.quiz.questions.length - 3} more {module.quiz.questions.length - 3 === 1 ? 'question' : 'questions'}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Card>
             </motion.div>
@@ -297,13 +544,39 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
           {/* Sidebar - Enrollment - Shows below curriculum on mobile, beside on desktop */}
           <div className="lg:col-span-1 order-2">
             <div ref={trackRef} className="relative">
-              <div ref={cardRef} style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
+              <div ref={cardRef} className="w-full">
                 <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-                  <Card className="p-8 border-white/10 bg-white/5 backdrop-blur-sm">
+                  <Card className="p-6 sm:p-8 border-white/10 bg-white/5 backdrop-blur-sm">
                     {!showPayment ? (
                       <>
                         <div className="text-center mb-6">
-                          <div className="text-5xl text-white mb-2">${course.price}</div>
+                          <div className="flex items-center justify-center gap-3 mb-2">
+                            <div className="text-5xl text-white">
+                              {currencySymbols[currency]}{convertPrice(course.price)}
+                            </div>
+                            <Select value={currency} onValueChange={setCurrency}>
+                              <SelectTrigger className="h-8 w-24 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 text-white text-xs font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-slate-900/95 backdrop-blur-md border border-white/20 shadow-xl rounded-lg min-w-[100px] p-1">
+                                <SelectItem value="USD" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                  USD
+                                </SelectItem>
+                                <SelectItem value="EUR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                  EUR
+                                </SelectItem>
+                                <SelectItem value="GBP" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                  GBP
+                                </SelectItem>
+                                <SelectItem value="AED" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                  AED
+                                </SelectItem>
+                                <SelectItem value="INR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                  INR
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                           <p className="text-white/70">One-time payment</p>
                         </div>
 
@@ -318,7 +591,7 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
                       </>
                     ) : (
                       <>
-                        <h3 className="text-2xl text-white mb-6 text-center">Payment Details</h3>
+                        <h3 className="text-2xl text-white mb-6 text-center font-bold">Payment Details</h3>
 
                         <form onSubmit={handlePayment} className="space-y-4">
                           <div>
@@ -345,9 +618,37 @@ export function CourseDetailPage({ courseId, onNavigate, scrollToSection }: Cour
                             </div>
                           </div>
 
-                          <div className="pt-4 border-t border-white/10 flex items-center justify-between text-white">
-                            <span>Total</span>
-                            <span className="text-2xl">${course.price}</span>
+                          <div className="pt-4 border-t border-white/10">
+                            <div className="flex items-center justify-between text-white mb-3">
+                              <span>Total</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-2xl">
+                                  {currencySymbols[currency]}{convertPrice(course.price)}
+                                </span>
+                                <Select value={currency} onValueChange={setCurrency}>
+                                  <SelectTrigger className="h-8 w-24 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 text-white text-xs font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-slate-900/95 backdrop-blur-md border border-white/20 shadow-xl rounded-lg min-w-[100px] p-1">
+                                    <SelectItem value="USD" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                      USD
+                                    </SelectItem>
+                                    <SelectItem value="EUR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                      EUR
+                                    </SelectItem>
+                                    <SelectItem value="GBP" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                      GBP
+                                    </SelectItem>
+                                    <SelectItem value="AED" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                      AED
+                                    </SelectItem>
+                                    <SelectItem value="INR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                      INR
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
                           </div>
 
                           <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-0 shadow-xl"><Lock className="w-4 h-4 mr-2" />Complete Payment</Button>

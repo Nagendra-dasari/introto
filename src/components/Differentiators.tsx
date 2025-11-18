@@ -14,14 +14,14 @@ import {
 const differentiators = [
   {
     icon: Award,
-    title: "Industry-Recognized Certificates",
-    description: "Earn credentials that matter to employers worldwide",
+    title: "Trusted Indian Wisdom",
+    description: "Join 5K+ learners<br />across 19 countries<br />— with a 98% positive impact rating",
     gradient: "from-amber-400 to-orange-500"
   },
   {
     icon: Clock,
-    title: "Flexible Learning Schedules",
-    description: "Learn at your own pace, anytime and anywhere",
+    title: "Dharmic Credentials",
+    description: "Knowledge drawn strictly from Dharmic sources — designed for real-life impact",
     gradient: "from-blue-400 to-indigo-500"
   },
   {
@@ -38,33 +38,33 @@ const differentiators = [
   },
   {
     icon: Shield,
-    title: "Quality Guaranteed",
-    description: "Every course meets our rigorous standards of excellence",
+    title: "Active Reflection",
+    description: "Apply what you learn through engaging work — practice, not just theory",
     gradient: "from-green-400 to-emerald-500"
   },
   {
     icon: Zap,
-    title: "Cutting-Edge Curriculum",
-    description: "Stay ahead with constantly updated content",
+    title: "Global Learner Circle",
+    description: "Connect with seekers from around the world exploring Indian wisdom together",
     gradient: "from-yellow-400 to-amber-500"
   },
   {
     icon: BookOpen,
-    title: "Hands-On Projects",
-    description: "Build real-world portfolio with practical assignments",
+    title: "Tailored Learning Paths",
+    description: "Choose a journey that fits your goals — from curious seeker to confident pioneer",
     gradient: "from-rose-400 to-red-500"
   },
   {
     icon: Target,
-    title: "Personalized Learning Paths",
-    description: "AI-powered recommendations tailored to your goals",
+    title: "Learning that Sticks",
+    description: "Insights built for real retention — reflect and apply so ideas stay with you for life",
     gradient: "from-violet-400 to-purple-500"
   }
 ];
 
 export function Differentiators() {
   return (
-    <section className="py-16 sm:py-20 md:py-24 relative">
+    <section className="py-16 sm:py-20 md:py-24 relative" style={{ fontFamily: 'Calibri, sans-serif' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -73,13 +73,14 @@ export function Differentiators() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6 px-4 sm:px-0">
-            What Sets Us Apart
+          <h2 className="text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6 px-4 sm:px-0 font-bold">
+            <span className="block text-white">Civilizational Clarity. Real Transformation.</span>
+            <span className="block bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">
+              Everyday Insights for Empowerment
+            </span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto italic px-4 sm:px-0">
-            Experience the EduVista advantage through our commitment<br />
-            to excellence, innovation, and your success<br />
-            Join thousands of learners transforming their careers today
+            Short, powerful courses that bring India&apos;s wisdom into your modern life<br />- for curious professionals, learners and seekers
           </p>
         </motion.div>
 
@@ -100,7 +101,7 @@ export function Differentiators() {
                 </div>
                 
                 <h3 className="text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-white/70 leading-relaxed">{item.description}</p>
+                <p className="text-sm text-white/70 leading-relaxed" dangerouslySetInnerHTML={{ __html: item.description }} />
               </div>
             </motion.div>
           ))}

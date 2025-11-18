@@ -52,7 +52,7 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
               </div>
               <span className="text-xl sm:text-2xl text-white">Introto</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl text-white mb-2">Welcome Back</h1>
+            <h1 className="text-2xl sm:text-3xl text-white mb-2 font-bold">Welcome Back</h1>
             <p className="text-sm sm:text-base text-white/70">Sign in to continue your learning journey</p>
           </div>
 
@@ -120,13 +120,8 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
 
             <div className="text-sm text-white/70 space-y-2 p-4 rounded-lg bg-white/5 border border-white/10">
               <div>
-                <p className="text-white/90 font-medium mb-1">Regular User:</p>
+                <p className="text-white/90 font-medium mb-1">Demo Credentials:</p>
                 <p>Email: <span className="text-white">demo@introto.com</span></p>
-                <p>Password: <span className="text-white">any password</span></p>
-              </div>
-              <div className="pt-2 border-t border-white/10">
-                <p className="text-amber-300 font-medium mb-1">Admin Access:</p>
-                <p>Email: <span className="text-white">admin@introto.com</span></p>
                 <p>Password: <span className="text-white">any password</span></p>
               </div>
             </div>

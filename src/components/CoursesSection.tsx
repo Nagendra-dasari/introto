@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { Clock, Users, ArrowRight, Languages } from "lucide-react";
+import { Clock, Users, ArrowRight, Languages, Share2, Check } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { coursesData } from "../data/coursesData";
 import { useState } from "react";
@@ -17,11 +17,13 @@ interface CoursesSectionProps {
   onNavigate: (page: string, courseId?: number | string, scrollTo?: string) => void;
   showAll?: boolean;
   searchQuery?: string;
+  selectedCategory?: string;
   scrollToCurriculum?: boolean;
 }
 
-export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", scrollToCurriculum = false }: CoursesSectionProps) {
+export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", selectedCategory = "All", scrollToCurriculum = false }: CoursesSectionProps) {
   const [currency, setCurrency] = useState<string>("USD");
+  const [copiedCourseId, setCopiedCourseId] = useState<number | null>(null);
   
   // Currency conversion rates (base: USD)
   const currencyRates: Record<string, number> = {
@@ -40,12 +42,14 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
     INR: "₹",
   };
 
-  // Filter courses by search query
-  const filteredCourses = coursesData.filter(course =>
-    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter courses by search query and category
+  const filteredCourses = coursesData.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || course.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const displayCourses = showAll ? filteredCourses : filteredCourses.slice(0, 6);
 
@@ -59,16 +63,32 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
   const microCourses = displayCourses.filter(c => c.segment === 'micro');
   const wipCourses = displayCourses.filter(c => c.segment === 'wip');
 
+  const handleShareCourse = async (courseId: number) => {
+    const courseLink = `${window.location.origin}/course-detail/${courseId}`;
+    try {
+      await navigator.clipboard.writeText(courseLink);
+      setCopiedCourseId(courseId);
+      setTimeout(() => setCopiedCourseId(null), 2000);
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = courseLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopiedCourseId(courseId);
+      setTimeout(() => setCopiedCourseId(null), 2000);
+    }
+  };
+
   const renderCourseGrid = (courses: typeof coursesData, segmentTitle: string, segmentColor: string) => {
     if (courses.length === 0) return null;
     
     return (
       <div className="mb-16">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-8">
-          <h3 className="text-2xl sm:text-3xl text-white font-semibold">{segmentTitle}</h3>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${segmentColor} w-fit`}>
-            {courses.length} {courses.length === 1 ? 'Course' : 'Courses'}
-          </span>
+        <div className="text-center mb-8">
+          <h3 className="text-2xl sm:text-3xl text-white font-bold">{segmentTitle}</h3>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course, idx) => (
@@ -97,12 +117,12 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
 
                   <div className="p-6 flex-1 flex flex-col">
                     {/* Centered Title */}
-                    <h3 className="text-white text-center mb-2 text-lg font-semibold group-hover:text-amber-300 transition-colors">
+                    <h3 className="text-white text-center mb-2 text-lg font-bold group-hover:text-amber-300 transition-colors">
                       {course.title}
                     </h3>
 
                     {/* Centered Icon Details */}
-                    <div className="flex items-center justify-center gap-6 mb-4 text-sm text-white/70">
+                    <div className="flex items-center justify-center gap-6 mb-4 text-sm text-white/70 flex-wrap">
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         <span>{course.duration}</span>
@@ -115,10 +135,30 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                         <Languages className="w-4 h-4" />
                         <span>English</span>
                       </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShareCourse(course.id);
+                        }}
+                        className="flex items-center gap-1 hover:text-amber-300 transition-colors cursor-pointer"
+                        title="Share course"
+                      >
+                        {copiedCourseId === course.id ? (
+                          <>
+                            <Check className="w-4 h-4 text-green-400" />
+                            <span className="text-green-400">Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Share2 className="w-4 h-4" />
+                            <span>Share</span>
+                          </>
+                        )}
+                      </button>
                     </div>
 
                     {/* Brief Description (4 lines) */}
-                    <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center">
+                    <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center italic">
                       {course.description}
                     </p>
 
@@ -128,15 +168,25 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                           {currencySymbols[currency]}{convertPrice(course.price)}
                         </span>
                         <Select value={currency} onValueChange={setCurrency}>
-                          <SelectTrigger className="h-8 w-20 bg-white/10 border-white/20 text-white text-xs">
+                          <SelectTrigger className="h-8 w-24 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 text-white text-xs font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-white/20">
-                            <SelectItem value="USD">USD</SelectItem>
-                            <SelectItem value="EUR">EUR</SelectItem>
-                            <SelectItem value="GBP">GBP</SelectItem>
-                            <SelectItem value="AED">AED</SelectItem>
-                            <SelectItem value="INR">INR</SelectItem>
+                          <SelectContent className="bg-slate-900/95 backdrop-blur-md border border-white/20 shadow-xl rounded-lg min-w-[100px] p-1">
+                            <SelectItem value="USD" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                              USD
+                            </SelectItem>
+                            <SelectItem value="EUR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                              EUR
+                            </SelectItem>
+                            <SelectItem value="GBP" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                              GBP
+                            </SelectItem>
+                            <SelectItem value="AED" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                              AED
+                            </SelectItem>
+                            <SelectItem value="INR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                              INR
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -159,7 +209,7 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
     };
 
   return (
-    <section id="courses" className="py-12 relative">
+    <section id="courses" className="py-16 sm:py-20 md:py-24 relative" style={{ fontFamily: 'Calibri, sans-serif' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {!showAll && (
           <motion.div
@@ -169,11 +219,11 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl lg:text-5xl text-white mb-6">
-              Explore Our Premium Course Catalog
+            <h2 className="text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6 px-4 sm:px-0 font-bold">
+              <span className="text-white">Premium Courses.</span> <span className="bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">Timeless Wisdom</span>
             </h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Discover expertly crafted courses designed to accelerate your career and expand your skill set
+            <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto italic px-4 sm:px-0">
+              Built for clarity and reflection - designed for real-world transformation without complexity or jargon
             </p>
           </motion.div>
         )}
@@ -218,12 +268,12 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
 
                     <div className="p-6 flex-1 flex flex-col">
                       {/* Centered Title */}
-                      <h3 className="text-white text-center mb-2 text-lg font-semibold group-hover:text-amber-300 transition-colors">
+                      <h3 className="text-white text-center mb-2 text-lg font-bold group-hover:text-amber-300 transition-colors">
                         {course.title}
                       </h3>
 
                       {/* Centered Icon Details */}
-                      <div className="flex items-center justify-center gap-6 mb-4 text-sm text-white/70">
+                      <div className="flex items-center justify-center gap-6 mb-4 text-sm text-white/70 flex-wrap">
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
                           <span>{course.duration}</span>
@@ -236,10 +286,30 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                           <Languages className="w-4 h-4" />
                           <span>English</span>
                         </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShareCourse(course.id);
+                          }}
+                          className="flex items-center gap-1 hover:text-amber-300 transition-colors cursor-pointer"
+                          title="Share course"
+                        >
+                          {copiedCourseId === course.id ? (
+                            <>
+                              <Check className="w-4 h-4 text-green-400" />
+                              <span className="text-green-400">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Share2 className="w-4 h-4" />
+                              <span>Share</span>
+                            </>
+                          )}
+                        </button>
                       </div>
 
                       {/* Brief Description (4 lines) */}
-                      <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center">
+                      <p className="text-white/70 text-sm leading-relaxed mb-4 flex-1 line-clamp-4 text-center italic">
                         {course.description}
                       </p>
 
@@ -249,15 +319,25 @@ export function CoursesSection({ onNavigate, showAll = false, searchQuery = "", 
                             {currencySymbols[currency]}{convertPrice(course.price)}
                           </span>
                           <Select value={currency} onValueChange={setCurrency}>
-                            <SelectTrigger className="h-8 w-20 bg-white/10 border-white/20 text-white text-xs">
+                            <SelectTrigger className="h-8 w-24 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 text-white text-xs font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="bg-slate-800 border-white/20">
-                              <SelectItem value="USD">USD</SelectItem>
-                              <SelectItem value="EUR">EUR</SelectItem>
-                              <SelectItem value="GBP">GBP</SelectItem>
-                              <SelectItem value="AED">AED</SelectItem>
-                              <SelectItem value="INR">INR</SelectItem>
+                            <SelectContent className="bg-slate-900/95 backdrop-blur-md border border-white/20 shadow-xl rounded-lg min-w-[100px] p-1">
+                              <SelectItem value="USD" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                USD
+                              </SelectItem>
+                              <SelectItem value="EUR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                EUR
+                              </SelectItem>
+                              <SelectItem value="GBP" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                GBP
+                              </SelectItem>
+                              <SelectItem value="AED" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                AED
+                              </SelectItem>
+                              <SelectItem value="INR" className="text-white hover:bg-white/10 focus:bg-white/10 rounded-md cursor-pointer py-2 px-3 text-xs font-medium transition-colors">
+                                INR
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>

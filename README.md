@@ -5,10 +5,9 @@
 ## Features
 
 - 🎓 **Modern Landing Page** with hero section, courses, and testimonials
-- 👤 **User Authentication** with admin and regular user roles
+- 👤 **User Authentication** with user profiles
 - 📊 **User Profile Dashboard** with learning progress and achievements
 - 📚 **Learning Management System (LMS)** with courses and quizzes
-- 🛠️ **Admin Panel** for content management
 - 📝 **Blog** with search and categories
 - 💬 **Community** page with testimonials and discussions
 - 📱 **Fully Responsive** design for all devices
@@ -24,13 +23,8 @@
 
 ## Demo Credentials
 
-### Regular User
-- Email: `user@introto.com`
-- Password: `password123`
-
-### Admin User
-- Email: `admin@introto.com`
-- Password: `admin123`
+- Email: `demo@introto.com`
+- Password: `any password`
 
 ## Development
 

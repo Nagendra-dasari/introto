@@ -83,22 +83,22 @@ export function BlogPage() {
   });
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 md:pt-24 pb-12">
+    <div className="min-h-screen pt-12 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12"
+          className="text-center mb-8 max-w-5xl mx-auto"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl text-white mb-4 sm:mb-6 leading-normal">
-            Introto
-            <span className="block bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 bg-clip-text text-transparent pb-3 leading-relaxed">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl text-white font-bold mb-6 leading-tight">
+            Introto{" "}
+            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 bg-clip-text text-transparent">
               Blog
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto px-4">
+          <p className="text-sm sm:text-base md:text-lg text-white mb-8 max-w-2xl mx-auto italic">
             Insights, stories, and resources to help you grow in your career
           </p>
         </motion.div>
@@ -162,10 +162,10 @@ export function BlogPage() {
                     </div>
                   </div>
                   <div className="p-4 sm:p-6 flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl text-white mb-2 sm:mb-3 group-hover:text-amber-300 transition-colors line-clamp-2 min-h-[56px] sm:min-h-[64px]">
+                    <h3 className="text-lg sm:text-xl text-white mb-2 sm:mb-3 group-hover:text-amber-300 transition-colors line-clamp-2 min-h-[56px] sm:min-h-[64px] font-bold">
                       {post.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-white/70 mb-3 sm:mb-4 flex-1 line-clamp-3 min-h-[72px] sm:min-h-[84px]">
+                    <p className="text-sm sm:text-base text-white/70 mb-3 sm:mb-4 flex-1 line-clamp-3 min-h-[72px] sm:min-h-[84px] italic">
                       {post.excerpt}
                     </p>
                     <div className="flex items-center gap-3 sm:gap-4 text-xs text-white/60 mb-3 sm:mb-4">

@@ -20,17 +20,22 @@ export function Footer() {
           {/* Panel 1 - Introto Newsletter */}
           <div className="flex flex-col h-full sm:col-span-2 lg:col-span-2 lg:mr-8">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl">I</span>
-              </div>
-              <span className="text-xl text-white">Introto</span>
+              <svg
+                className="w-9 h-9 sm:w-11 sm:h-11 flex-shrink-0 self-center"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="1.5" fill="none"/>
+                <circle cx="12" cy="12" r="4" fill="white"/>
+              </svg>
+              <span className="text-2xl sm:text-3xl text-white font-bold leading-none flex items-center">introto.in</span>
             </div>
-            <p className="text-white mb-4 text-sm leading-relaxed line-clamp-2">
-              Empowering learners worldwide with AI-powered education.<br />
-              Join thousands of students who are advancing their careers with Introto.
+            <p className="text-xs sm:text-sm md:text-base text-white/80 max-w-2xl mx-auto px-4 sm:px-0 mb-4 leading-loose text-justify" style={{ wordSpacing: '-0.05em' }}>
+              Bringing Bharatiya wisdom to modern learners through beautifully crafted digital courses. Join thousands of seekers worldwide rediscovering clarity, purpose and living knowledge with <span className="text-blue-300">Introto</span>.
             </p>
             <div className="mb-4">
-              <h3 className="text-white mb-3 text-sm">Download Free E-book</h3>
+              <h3 className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto px-4 sm:px-0 italic mb-3 font-bold">Download Free E-book on Indian Knowledge Systems</h3>
               <form onSubmit={handleDownload} className="flex flex-col sm:flex-row gap-2 w-full">
                 <input
                   type="email"
@@ -53,7 +58,7 @@ export function Footer() {
 
           {/* Panel 2 - Connect */}
           <div className="flex flex-col h-full">
-            <h3 className="text-white mb-4 text-base font-semibold">Connect</h3>
+            <h3 className="text-white mb-4 text-base font-bold">Connect</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
@@ -90,7 +95,7 @@ export function Footer() {
 
           {/* Panel 3 - Company */}
           <div className="flex flex-col h-full">
-            <h3 className="text-white mb-4 text-base font-semibold">Company</h3>
+            <h3 className="text-white mb-4 text-base font-bold">Company</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="text-white/70 hover:text-white transition-colors">
@@ -122,7 +127,7 @@ export function Footer() {
 
           {/* Panel 4 - Legal */}
           <div className="flex flex-col h-full">
-            <h3 className="text-white mb-4 text-base font-semibold">Legal</h3>
+            <h3 className="text-white mb-4 text-base font-bold">Legal</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="text-white/70 hover:text-white transition-colors">

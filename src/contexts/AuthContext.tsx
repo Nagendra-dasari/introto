@@ -5,7 +5,6 @@ interface User {
   name: string;
   email: string;
   enrolledCourses: number[];
-  isAdmin?: boolean;
 }
 
 interface AuthContextType {
@@ -13,7 +12,6 @@ interface AuthContextType {
   login: (email: string, password: string) => boolean;
   logout: () => void;
   isAuthenticated: boolean;
-  isAdmin: boolean;
   enrollCourse: (courseId: number) => void;
   isEnrolled: (courseId: number) => boolean;
 }
@@ -26,15 +24,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (email: string, password: string): boolean => {
     // Mock login - in real app, this would call an API
     if (email && password) {
-      // Check if admin credentials
-      const isAdminUser = email === "admin@introto.com";
-      
       setUser({
-        id: isAdminUser ? "admin-1" : "1",
-        name: isAdminUser ? "Admin" : email.split("@")[0],
+        id: "1",
+        name: email.split("@")[0],
         email: email,
-        enrolledCourses: [],
-        isAdmin: isAdminUser
+        enrolledCourses: []
       });
       return true;
     }
@@ -65,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login, 
         logout, 
         isAuthenticated: !!user,
-        isAdmin: !!user?.isAdmin,
         enrollCourse,
         isEnrolled
       }}

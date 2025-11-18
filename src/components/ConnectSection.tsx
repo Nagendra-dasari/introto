@@ -40,14 +40,14 @@ export function ConnectSection() {
               <span className="text-sm text-amber-300">Free Download</span>
             </div>
 
-            <h2 className="text-4xl lg:text-5xl text-white leading-tight">
+            <h2 className="text-4xl lg:text-5xl text-white leading-tight font-bold">
               Get Your Free
               <span className="block bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 bg-clip-text text-transparent">
                 Career Development Guide
               </span>
             </h2>
 
-            <p className="text-lg text-white/80 leading-relaxed">
+            <p className="text-lg text-white/80 leading-relaxed italic">
               Download our comprehensive 50-page e-book packed with actionable strategies, industry insights, and expert advice to accelerate your professional growth.
             </p>
 
@@ -125,7 +125,7 @@ export function ConnectSection() {
                         <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4">
                           <span className="text-2xl">📚</span>
                         </div>
-                        <h3 className="text-2xl mb-2">Career Development Guide</h3>
+                        <h3 className="text-2xl mb-2 font-bold">Career Development Guide</h3>
                         <p className="text-sm text-white/90">Transform Your Professional Journey</p>
                       </div>
                     </div>
