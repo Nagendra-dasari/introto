@@ -241,7 +241,7 @@ export function TestimonialsSection() {
           <h2 className="text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6 px-4 sm:px-0 font-bold">
             <span className="text-white">Real Words.</span> <span className="bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">Real Transformation</span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
+          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto italic px-4 sm:px-0">
             Stories of clarity, confidence and transformation<br />
             - from seekers across 19+ countries
           </p>
