@@ -238,11 +238,12 @@ export function TestimonialsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6 px-4 sm:px-0">
-            What Our Learners Say
+          <h2 className="text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6 px-4 sm:px-0 font-bold">
+            <span className="text-white">Real Words.</span> <span className="bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">Real Transformation</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
-            Join over 50,000 professionals who have transformed their careers with EduVista
+            Stories of clarity, confidence and transformation<br />
+            - from seekers across 19+ countries
           </p>
         </motion.div>
 
